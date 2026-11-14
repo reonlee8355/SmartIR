@@ -81,6 +81,14 @@ Each different class (Climate, Fan, Media Player) device file has common part an
 | `fanModes`        |   `no`    | `array of strings` | List of the fan modes your device can operate in. Does you device support fan modes? High, low, auto, etc.? Than those shall be listed here. The fan modes names could be freely defined to match naming used by your device.                                                                                              |
 | `swingModes`      |   `no`    | `array of strings` | List of the fan swing modes your device can operate in. Does you device support different ways how your fan grills move? Than those shall be listed here. The swing modes names could be freely defined to match naming used by your device.                                                                               |
 
+**Custom fork (`+custom.2`): horizontal swing**
+
+| json attribute        | mandatory |        type        | description |
+| --------------------- | :-------: | :----------------: | ----------- |
+| `swingHorizontalModes` |   `no`    | `array of strings` | Horizontal swing modes (HA `swing_horizontal_mode`, needs HA core 2024.12+). Command tree level order: `operation` -> `preset` -> `fan` -> `swing` -> `swingHorizontal` -> `temperature`. |
+
+`swingModes` / `swingHorizontalModes` may be declared before their IR codes are recorded: the modes show up in the HA UI, selecting a mode with no recorded code sends nothing (warning in the log) and the state is not changed. Other commands keep using the existing codes. Once codes for a level are recorded, they must be complete for all declared modes.
+
 ### Climate commands
 
 Now when all modes supported by your device (operation, presets, fan, swing) are declared, you need to records IR command for their combination for any target temperature. There may be some tools to help you to help with such process.

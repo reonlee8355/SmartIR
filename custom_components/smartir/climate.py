@@ -120,6 +120,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
         self._preset_mode = None
         self._fan_mode = None
         self._swing_mode = None
+        self._swing_horizontal_mode = None
         self._hvac_action = None
         self._on_by_remote = False
         self._current_temperature = None
@@ -219,6 +220,20 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             self._support_flags = self._support_flags | ClimateEntityFeature.SWING_MODE
             self._swing_mode = self._swing_modes[0]
 
+        # swing_horizontal_modes (needs HA core 2024.12+)
+        self._swing_horizontal_modes = device_data.get("swingHorizontalModes")
+        if (
+            isinstance(self._swing_horizontal_modes, list)
+            and len(self._swing_horizontal_modes)
+            and hasattr(ClimateEntityFeature, "SWING_HORIZONTAL_MODE")
+        ):
+            self._support_flags = (
+                self._support_flags | ClimateEntityFeature.SWING_HORIZONTAL_MODE
+            )
+            self._swing_horizontal_mode = self._swing_horizontal_modes[0]
+        else:
+            self._swing_horizontal_modes = None
+
         # Init exclusive lock for sending IR commands
         self._temp_lock = asyncio.Lock()
 
@@ -266,6 +281,15 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
                 and last_state.attributes.get("swing_mode") in self._swing_modes
             ):
                 self._swing_mode = last_state.attributes.get("swing_mode")
+
+            if (
+                self._swing_horizontal_modes
+                and last_state.attributes.get("swing_horizontal_mode")
+                in self._swing_horizontal_modes
+            ):
+                self._swing_horizontal_mode = last_state.attributes.get(
+                    "swing_horizontal_mode"
+                )
 
             temperature = last_state.attributes.get("temperature")
             if (
@@ -405,6 +429,19 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             return self._swing_mode
 
     @property
+    def swing_horizontal_modes(self):
+        """Return the horizontal swing modes currently supported for this device."""
+        return self._swing_horizontal_modes
+
+    @property
+    def swing_horizontal_mode(self):
+        """Return the current horizontal swing mode."""
+        if self._on_by_remote and not self._power_sensor_restore_state:
+            return None
+        else:
+            return self._swing_horizontal_mode
+
+    @property
     def current_temperature(self):
         """Return the current temperature."""
         return self._current_temperature
@@ -458,6 +495,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             self._preset_mode,
             self._fan_mode,
             self._swing_mode,
+            self._swing_horizontal_mode,
             self._target_temperature,
         )
 
@@ -495,6 +533,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             self._preset_mode,
             self._fan_mode,
             self._swing_mode,
+            self._swing_horizontal_mode,
             temperature,
         )
 
@@ -511,6 +550,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             preset_mode,
             self._fan_mode,
             self._swing_mode,
+            self._swing_horizontal_mode,
             self._target_temperature,
         )
 
@@ -527,6 +567,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             self._preset_mode,
             fan_mode,
             self._swing_mode,
+            self._swing_horizontal_mode,
             self._target_temperature,
         )
 
@@ -543,6 +584,27 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
             self._preset_mode,
             self._fan_mode,
             swing_mode,
+            self._swing_horizontal_mode,
+            self._target_temperature,
+        )
+
+    async def async_set_swing_horizontal_mode(self, swing_horizontal_mode):
+        """Set horizontal swing mode."""
+        swing_horizontal_mode = str(swing_horizontal_mode)
+        if swing_horizontal_mode not in (self._swing_horizontal_modes or []):
+            _LOGGER.error(
+                "The horizontal swing mode '%s' is not supported.",
+                swing_horizontal_mode,
+            )
+            return
+
+        await self._send_command(
+            self._state,
+            self._hvac_mode,
+            self._preset_mode,
+            self._fan_mode,
+            self._swing_mode,
+            swing_horizontal_mode,
             self._target_temperature,
         )
 
@@ -554,8 +616,22 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
         """Turn on."""
         await self.async_set_hvac_mode(self._hvac_mode)
 
+    @staticmethod
+    def _level_registered(commands, names):
+        """True if this command level is keyed by the given mode names (or '-')."""
+        return isinstance(commands, dict) and bool(
+            set(commands.keys()) & (set(names) | {"-"})
+        )
+
     async def _send_command(
-        self, state, hvac_mode, preset_mode, fan_mode, swing_mode, temperature
+        self,
+        state,
+        hvac_mode,
+        preset_mode,
+        fan_mode,
+        swing_mode,
+        swing_horizontal_mode,
+        temperature,
     ):
         async with self._temp_lock:
             if self._power_sensor and self._state != state:
@@ -676,7 +752,16 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
                             )
                             return
 
-                    if self._swing_modes:
+                    if self._swing_modes and not self._level_registered(
+                        commands, [swing_mode] + self._swing_modes
+                    ):
+                        if swing_mode != self._swing_mode:
+                            _LOGGER.warning(
+                                "No IR codes recorded yet for swing mode '%s', nothing sent.",
+                                swing_mode,
+                            )
+                            return
+                    elif self._swing_modes:
                         if isinstance(commands, dict):
                             for key in ["-", swing_mode] + self._swing_modes:
                                 if key in commands.keys():
@@ -696,6 +781,41 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
                         else:
                             _LOGGER.error(
                                 "No device IR codes for swing modes are defined.",
+                            )
+                            return
+
+                    if self._swing_horizontal_modes and not self._level_registered(
+                        commands, [swing_horizontal_mode] + self._swing_horizontal_modes
+                    ):
+                        if swing_horizontal_mode != self._swing_horizontal_mode:
+                            _LOGGER.warning(
+                                "No IR codes recorded yet for horizontal swing mode '%s', nothing sent.",
+                                swing_horizontal_mode,
+                            )
+                            return
+                    elif self._swing_horizontal_modes:
+                        if isinstance(commands, dict):
+                            for key in [
+                                "-",
+                                swing_horizontal_mode,
+                            ] + self._swing_horizontal_modes:
+                                if key in commands.keys():
+                                    swing_horizontal_mode = key
+                                    commands = commands[key]
+                                    _LOGGER.debug(
+                                        "Found '%s' horizontal swing mode command.",
+                                        swing_horizontal_mode,
+                                    )
+                                    break
+                            else:
+                                _LOGGER.error(
+                                    "Missing device IR codes for selected '%s' horizontal swing mode.",
+                                    swing_horizontal_mode,
+                                )
+                                return
+                        else:
+                            _LOGGER.error(
+                                "No device IR codes for horizontal swing modes are defined.",
                             )
                             return
 
@@ -781,6 +901,8 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
                     self._fan_mode = fan_mode
                 if swing_mode != "-":
                     self._swing_mode = swing_mode
+                if swing_horizontal_mode is not None and swing_horizontal_mode != "-":
+                    self._swing_horizontal_mode = swing_horizontal_mode
                 if temperature != "-":
                     self._target_temperature = temperature
                 await self._async_update_hvac_action()

@@ -216,7 +216,7 @@ class DeviceData:
                 )
                 return False
             modes_used["operation"][mode] = 0
-        for level in ["preset", "fan", "swing"]:
+        for level in ["preset", "fan", "swing", "swingHorizontal"]:
             attr = level + "Modes"
             if attr in device_data and isinstance(device_data[attr], list):
                 modes_list.append(level)
@@ -317,6 +317,39 @@ class DeviceData:
                 file_name,
             )
             return False
+
+        # swing levels may be declared before their IR codes are recorded:
+        # skip those levels in the command tree check (nothing is sent for them yet)
+        node_ok = isinstance(device_data["commands"], dict)
+        for level in ("swing", "swingHorizontal"):
+            if level not in modes_list or not node_ok:
+                continue
+            node = None
+            for op in device_data["operationModes"]:
+                if isinstance(device_data["commands"].get(op), dict):
+                    node = device_data["commands"][op]
+                    break
+            registered = False
+            for lvl in modes_list[1:]:
+                if not isinstance(node, dict) or not node:
+                    break
+                if lvl == level:
+                    names = set(modes_used[level].keys()) | {"-"}
+                    registered = bool(names & set(node.keys()))
+                    break
+                if lvl == "temperature":
+                    break
+                key = next(iter(node.keys()))
+                node = node[key]
+            if not registered:
+                _LOGGER.info(
+                    "%s device JSON file '%s': no IR codes recorded yet for '%s' modes, level skipped.",
+                    device_class,
+                    file_name,
+                    level,
+                )
+                modes_list.remove(level)
+                del modes_used[level]
 
         results = DeviceData.check_file_climate_commands(
             file_name,
