@@ -30,6 +30,7 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.util.unit_conversion import TemperatureConverter
+from .device_link import link_device
 from . import DeviceData
 from .controller import get_controller, get_controller_schema
 
@@ -232,6 +233,7 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
     async def async_added_to_hass(self):
         """Run when entity about to be added."""
         await super().async_added_to_hass()
+        link_device(self)
         _LOGGER.debug(
             f"async_added_to_hass {self} {self.name} {self.supported_features}"
         )

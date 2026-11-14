@@ -10,6 +10,15 @@ from .controller_const import CONTROLLER_SUPPORT
 _LOGGER = logging.getLogger(__name__)
 
 
+async def async_setup_entry(hass, entry):
+    """Config entry only owns the devices; entities still come from YAML."""
+    return True
+
+
+async def async_unload_entry(hass, entry):
+    return True
+
+
 class DeviceData:
     @staticmethod
     async def load_file(device_code, device_class, check_data, hass):

@@ -16,6 +16,7 @@ from homeassistant.helpers.event import async_track_state_change_event, async_ca
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.typing import ConfigType
+from .device_link import link_device
 from . import DeviceData
 from .controller import get_controller, get_controller_schema
 
@@ -147,6 +148,7 @@ class SmartIRLight(LightEntity, RestoreEntity):
     async def async_added_to_hass(self):
         """Run when entity about to be added."""
         await super().async_added_to_hass()
+        link_device(self)
 
         last_state = await self.async_get_last_state()
         if last_state is not None:

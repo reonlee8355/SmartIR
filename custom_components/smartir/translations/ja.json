@@ -1,0 +1,1 @@
+{"config": {"step": {"user": {"title": "SmartIR", "description": "SmartIRを追加すると、YAMLで定義した機器がデバイス一覧に表示されます。"}}, "abort": {"single_instance_allowed": "SmartIRは既に追加されています。"}}}

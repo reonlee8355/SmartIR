@@ -1,0 +1,1 @@
+{"config": {"step": {"user": {"title": "SmartIR", "description": "Add SmartIR so YAML-defined devices appear in the Devices list."}}, "abort": {"single_instance_allowed": "SmartIR is already added."}}}
