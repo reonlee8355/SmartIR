@@ -1,0 +1,156 @@
+{
+ "remote": "Panasonic A75C3190 (配膳室)",
+ "captured": "2026-11-15 via ZS06 learn mode (zigbee2mqtt/0xf84477fffee3c68b)",
+ "captures": [
+  {
+   "capture": "#1 冷房・25℃・風量自動・スイング自動",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "auto",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 af 00 00 06 60 00 00 80 00 16 94"
+  },
+  {
+   "capture": "#2 冷房・25℃・しずか・スイング自動",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "quiet",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 3f 00 00 06 60 20 00 80 00 06 34"
+  },
+  {
+   "capture": "#3 冷房・25℃・風量1",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "1",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 3f 00 00 06 60 00 00 80 00 06 14"
+  },
+  {
+   "capture": "#4 冷房・25℃・風量2",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "2",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 4f 00 00 06 60 00 00 80 00 06 24"
+  },
+  {
+   "capture": "#5 冷房・25℃・風量3",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "3",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 5f 00 00 06 60 00 00 80 00 06 34"
+  },
+  {
+   "capture": "#6 冷房・25℃・風量4",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "4",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 7f 00 00 06 60 00 00 80 00 06 54"
+  },
+  {
+   "capture": "#7 冷房・25℃・パワフル",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "powerful",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 af 00 00 06 60 01 00 80 00 06 85"
+  },
+  {
+   "capture": "#8 冷房・16℃・風量自動",
+   "mode": "cool",
+   "temp": 16,
+   "fan": "auto",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 20 80 af 00 00 06 60 00 00 80 00 16 82"
+  },
+  {
+   "capture": "#9 冷房・30℃・風量自動",
+   "mode": "cool",
+   "temp": 30,
+   "fan": "auto",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 3c 80 af 00 00 06 60 00 00 80 00 16 9e"
+  },
+  {
+   "capture": "#10 暖房・25℃・風量自動",
+   "mode": "heat",
+   "temp": 25,
+   "fan": "auto",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 41 32 80 af 00 00 06 60 00 00 80 00 06 94"
+  },
+  {
+   "capture": "#11 暖房・16℃・風量自動",
+   "mode": "heat",
+   "temp": 16,
+   "fan": "auto",
+   "swing": "auto",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 41 20 80 af 00 00 06 60 00 00 80 00 06 82"
+  },
+  {
+   "capture": "#12 冷房・25℃・風量自動・スイング1",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "auto",
+   "swing": "1",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 a1 00 00 06 60 00 00 80 00 16 86"
+  },
+  {
+   "capture": "#13 冷房・25℃・風量自動・スイング5",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "auto",
+   "swing": "5",
+   "power": true,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 31 32 80 a5 00 00 06 60 00 00 80 00 16 8a"
+  },
+  {
+   "capture": "#14 OFF(冷房・25℃・風量自動・スイング自動の状態から)",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "auto",
+   "swing": "auto",
+   "power": false,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 30 32 80 af 00 00 06 60 00 00 80 00 16 93"
+  },
+  {
+   "capture": "#15 OFF(暖房・25℃・風量自動・スイング自動の状態から)",
+   "mode": "heat",
+   "temp": 25,
+   "fan": "auto",
+   "swing": "auto",
+   "power": false,
+   "frame1": "02 20 e0 04 00 00 00 06",
+   "frame2": "02 20 e0 04 00 40 32 80 af 00 00 06 60 00 00 80 00 06 93"
+  }
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "remote": "Daikin BRC4C105 (大広間)",
+ "captured": "2026-11-15 via ZS06 learn mode (zigbee2mqtt/0xf84477fffee3c68b)",
+ "fan_names": "1=弱 2=強 3=急速",
+ "captures": [
+  {
+   "capture": "#1 冷房・25℃・弱・スイング",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "1",
+   "swing": "swing",
+   "power": true,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 21 00 00 1a 15 00 20 fd"
+  },
+  {
+   "capture": "#2 冷房・25℃・弱・スイング自動",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "1",
+   "swing": "auto",
+   "power": true,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 21 00 00 1a 16 00 20 fe"
+  },
+  {
+   "capture": "#3 冷房・25℃・急速・スイング",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "3",
+   "swing": "swing",
+   "power": true,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 21 00 00 1a 55 00 20 3d"
+  },
+  {
+   "capture": "#4 暖房・25℃・強・スイング",
+   "mode": "heat",
+   "temp": 25,
+   "fan": "2",
+   "swing": "swing",
+   "power": true,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 11 00 00 24 35 00 20 17"
+  },
+  {
+   "capture": "#5 冷房・30℃・強・スイング自動",
+   "mode": "cool",
+   "temp": 30,
+   "fan": "2",
+   "swing": "auto",
+   "power": true,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 21 00 00 24 36 00 20 28"
+  },
+  {
+   "capture": "#6 OFF(冷房・25℃・弱・スイングの状態から)",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "1",
+   "swing": "swing",
+   "power": false,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 20 00 00 1a 15 00 20 fc"
+  },
+  {
+   "capture": "#7 OFF(暖房・25℃・弱・スイングの状態から)",
+   "mode": "heat",
+   "temp": 25,
+   "fan": "1",
+   "swing": "swing",
+   "power": false,
+   "frame1": "11 da 17 18 04 00 1e",
+   "frame2": "11 da 17 18 00 73 00 10 00 00 24 15 00 20 f6"
+  }
+ ]
+}
