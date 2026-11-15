@@ -1,0 +1,105 @@
+{
+ "remote": "Daikin BRC4L101 (swing fixed: swing)",
+ "captured": "2026-11-15 via ZS06 learn mode (zigbee2mqtt/0xf84477fffee3c68b)",
+ "captures": [
+  {
+   "capture": "#1",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "auto",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 21 0f 0f 1a 05 00 20 ff 00 00 52"
+  },
+  {
+   "capture": "#2",
+   "mode": "cool",
+   "temp": 20,
+   "fan": "auto",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 21 0f 0f 10 05 00 20 ff 00 00 48"
+  },
+  {
+   "capture": "#3",
+   "mode": "cool",
+   "temp": 30,
+   "fan": "auto",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 21 0f 0f 24 05 00 20 ff 00 00 5c"
+  },
+  {
+   "capture": "#4 弱",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "1",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 21 0f 0f 1a 15 00 20 ff 00 00 62"
+  },
+  {
+   "capture": "#5 強",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "2",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 21 0f 0f 1a 35 00 20 ff 00 00 82"
+  },
+  {
+   "capture": "#6 急速",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "3",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 21 0f 0f 1a 55 00 20 ff 00 00 a2"
+  },
+  {
+   "capture": "#7",
+   "mode": "heat",
+   "temp": 25,
+   "fan": "auto",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 11 0f 0f 24 05 00 20 ff 00 00 4c"
+  },
+  {
+   "capture": "#7b",
+   "mode": "heat",
+   "temp": 20,
+   "fan": "auto",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 11 0f 0f 1a 05 00 20 ff 00 00 42"
+  },
+  {
+   "capture": "#7c",
+   "mode": "heat",
+   "temp": 30,
+   "fan": "auto",
+   "power": true,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 11 0f 0f 2e 05 00 20 ff 00 00 56"
+  },
+  {
+   "capture": "#8 OFF(冷房の状態から)",
+   "mode": "cool",
+   "temp": 25,
+   "fan": "auto",
+   "power": false,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 20 0f 0f 1a 05 00 20 ff 00 00 51"
+  },
+  {
+   "capture": "#9 OFF(暖房の状態から。画面の設定温度は未確認で、信号の値は暖房20℃に当たる)",
+   "mode": "heat",
+   "temp": 20,
+   "fan": "auto",
+   "power": false,
+   "frame1": "11 da 17 28 04 00 2e",
+   "frame2": "11 da 17 28 00 73 38 10 0f 0f 1a 05 00 20 ff 00 00 41"
+  }
+ ]
+}
