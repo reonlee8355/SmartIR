@@ -174,5 +174,5 @@ def build(tmin=19, tmax=30):
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "8480.json"
     d = build()
-    json.dump(d, open(out, "w"), ensure_ascii=False, separators=(",", ":"))
+    json.dump(d, open(out, "w"), ensure_ascii=False, indent=2)
     print("wrote", out)
