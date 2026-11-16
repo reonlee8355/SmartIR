@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from base64 import b64encode
+import asyncio
 import ipaddress
 import binascii
 import requests
@@ -80,6 +81,8 @@ def get_controller_schema(vol, cv):
                     MQTT_CONTROLLER
                 ),
                 vol.Required(CONTROLLER_CONF["MQTT_TOPIC"]): cv.string,
+                vol.Optional(CONTROLLER_CONF["NUM_REPEATS"]): cv.positive_int,
+                vol.Optional(CONTROLLER_CONF["DELAY_SECS"]): cv.positive_float,
             }
         ),
         vol.Schema(
@@ -236,7 +239,14 @@ class MQTTController(AbstractController):
             "payload": command,
         }
 
-        await self.hass.services.async_call("mqtt", "publish", service_data)
+        # custom.3: optional num_repeats (total number of sends, default 1) and
+        # delay_secs (wait between sends, default 2.0) for unreliable IR delivery.
+        repeats = self._controller_data.get(CONTROLLER_CONF["NUM_REPEATS"], 1) or 1
+        delay = self._controller_data.get(CONTROLLER_CONF["DELAY_SECS"], 2.0)
+        for i in range(repeats):
+            if i:
+                await asyncio.sleep(delay)
+            await self.hass.services.async_call("mqtt", "publish", service_data)
 
 
 class LookinController(AbstractController):
