@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from base64 import b64encode
 import asyncio
+import logging
 import ipaddress
 import binascii
 import requests
@@ -28,6 +29,10 @@ from .controller_const import (
 )
 
 from homeassistant.const import ATTR_ENTITY_ID
+
+
+_LOGGER = logging.getLogger(__name__)
+_MQTT_SEND_GEN = {}
 
 
 def get_controller(hass, controller, encoding, controller_data):
@@ -239,14 +244,36 @@ class MQTTController(AbstractController):
             "payload": command,
         }
 
-        # custom.3: optional num_repeats (total number of sends, default 1) and
+        # custom.4: optional num_repeats (total number of sends, default 1) and
         # delay_secs (wait between sends, default 2.0) for unreliable IR delivery.
+        # A newer command to the same topic cancels the not-yet-sent repeats of an
+        # older command (so a stale repeat never overrides a newer operation).
+        # The MQTT publish is awaited (blocking) so that errors are logged.
+        topic = service_data["topic"]
         repeats = self._controller_data.get(CONTROLLER_CONF["NUM_REPEATS"], 1) or 1
         delay = self._controller_data.get(CONTROLLER_CONF["DELAY_SECS"], 2.0)
+        gen = _MQTT_SEND_GEN.get(topic, 0) + 1
+        _MQTT_SEND_GEN[topic] = gen
         for i in range(repeats):
             if i:
                 await asyncio.sleep(delay)
-            await self.hass.services.async_call("mqtt", "publish", service_data)
+                if _MQTT_SEND_GEN.get(topic) != gen:
+                    _LOGGER.debug(
+                        "SmartIR MQTT %s: repeat %d/%d cancelled by a newer command",
+                        topic, i + 1, repeats,
+                    )
+                    return
+            try:
+                await self.hass.services.async_call(
+                    "mqtt", "publish", service_data, blocking=True
+                )
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.error(
+                    "SmartIR MQTT publish failed: topic=%s send=%d/%d error=%s",
+                    topic, i + 1, repeats, err,
+                )
+                if i == 0:
+                    raise
 
 
 class LookinController(AbstractController):
