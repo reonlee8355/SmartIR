@@ -19,6 +19,11 @@ async def async_unload_entry(hass, entry):
     return True
 
 
+async def async_remove_config_entry_device(hass, config_entry, device_entry):
+    """Allow removing a device from the UI (devices whose YAML entry was deleted)."""
+    return True
+
+
 class DeviceData:
     @staticmethod
     async def load_file(device_code, device_class, check_data, hass):
