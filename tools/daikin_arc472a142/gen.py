@@ -140,7 +140,7 @@ def tkey(t):
     return str(int(t)) if t == int(t) else str(t)
 
 
-def build(tmin=19, tmax=30):
+def build(tmin=14, tmax=30):
     cmds = {}
     for mode in MODES:
         cmds[mode] = {}

@@ -104,7 +104,7 @@ def decode_frame2(code):
     return bytes(int(s[i:i + 8][::-1], 2) for i in range(0, len(s) - 7, 8))
 
 
-def build(tmin=18, tmax=30):
+def build(tmin=14, tmax=30):
     cmds = {}
     for mode in MODES:
         cmds[mode] = {}
