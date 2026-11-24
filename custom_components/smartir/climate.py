@@ -967,6 +967,14 @@ class SmartIRClimate(ClimateEntity, RestoreEntity):
 
         if self._state == STATE_OFF:
             self._hvac_action = HVACAction.OFF
+        # custom.6: ON のときは、室温と設定温度の比較に関係なく、モードの動作を返す
+        # （アイドル表示だとダッシュボードのアイコンがオフ色になり、ON/OFFが見分けられないため）
+        elif self._hvac_mode == HVACMode.HEAT:
+            self._hvac_action = HVACAction.HEATING
+        elif self._hvac_mode == HVACMode.COOL:
+            self._hvac_action = HVACAction.COOLING
+        elif self._hvac_mode == HVACMode.DRY:
+            self._hvac_action = HVACAction.DRYING
         elif (
             (
                 self._hvac_mode == HVACMode.HEAT
