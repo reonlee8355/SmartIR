@@ -7,6 +7,7 @@ import binascii
 import requests
 import struct
 import json
+from base64 import b64decode
 
 from .controller_const import (
     BROADLINK_CONTROLLER,
@@ -35,6 +36,35 @@ _LOGGER = logging.getLogger(__name__)
 _MQTT_SEND_GEN = {}
 
 
+def tuya_ir_to_timings(code):
+    """Convert a Tuya IR code (base64 of FastLZ level-1 data of LE uint16
+    microsecond timings) to a list of ints (mark, space, mark, ...)."""
+    inp = b64decode(code)
+    out = bytearray()
+    i = 0
+    while i < len(inp):
+        h = inp[i]
+        i += 1
+        kind = h >> 5
+        if kind == 0:
+            n = (h & 31) + 1
+            out += inp[i : i + n]
+            i += n
+        else:
+            n = kind
+            if n == 7:
+                n += inp[i]
+                i += 1
+            n += 2
+            ofs = ((h & 31) << 8) + inp[i] + 1
+            i += 1
+            for _ in range(n):
+                out.append(out[-ofs])
+    if len(out) % 2:
+        raise ValueError("Tuya IR code has an odd number of bytes")
+    return list(struct.unpack("<%dH" % (len(out) // 2), bytes(out)))
+
+
 def get_controller(hass, controller, encoding, controller_data):
     """Return a controller compatible with the specification provided."""
     controllers = {
@@ -50,6 +80,15 @@ def get_controller(hass, controller, encoding, controller_data):
     # check controller compatibility
     if controller not in controllers:
         raise Exception("The controller is not supported.")
+
+    # custom.7: device files written for the MQTT (Tuya ZS06) controller may also be
+    # driven through an ESPHome IR blaster; the ESPHome controller then converts
+    # the Tuya IR string to raw pulse timings.
+    if (
+        controller == MQTT_CONTROLLER
+        and controller_data["controller_type"] == ESPHOME_CONTROLLER
+    ):
+        controller = ESPHOME_CONTROLLER
 
     if controller_data["controller_type"] != controller:
         raise Exception(
@@ -114,6 +153,7 @@ def get_controller_schema(vol, cv):
                     ESPHOME_CONTROLLER
                 ),
                 vol.Required(CONTROLLER_CONF["ESPHOME_SERVICE"]): cv.string,
+                vol.Optional(CONTROLLER_CONF["CARRIER"]): cv.positive_int,
             }
         ),
         vol.Schema(
@@ -312,12 +352,26 @@ class ESPHomeController(AbstractController):
 
     async def send(self, command):
         """Send a command."""
-        service_data = {"command": json.loads(command)}
+        service_data = None
+        try:
+            parsed = json.loads(command)
+            if isinstance(parsed, list):
+                service_data = {"command": parsed}
+        except (ValueError, TypeError):
+            pass
+
+        if service_data is None:
+            # custom.7: Tuya IR string -> raw timings for the s06 `send_raw` action
+            service_data = {
+                "code": tuya_ir_to_timings(command),
+                "carrier": self._controller_data.get(CONTROLLER_CONF["CARRIER"], 38000),
+            }
 
         await self.hass.services.async_call(
             "esphome",
             self._controller_data[CONTROLLER_CONF["ESPHOME_SERVICE"]],
             service_data,
+            blocking=True,
         )
 
 

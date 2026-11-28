@@ -37,6 +37,7 @@ CONTROLLER_CONF = {
     "MQTT_TOPIC": "mqtt_topic",
     "REMOTE_HOST": "remote_host",
     "ESPHOME_SERVICE": "esphome_service",
+    "CARRIER": "carrier",
     "ZHA_IEEE": "zha_ieee",
     "ZHA_ENDPOINT_ID": "zha_endpoint_id",
     "ZHA_CLUSTER_ID": "zha_cluster_id",
