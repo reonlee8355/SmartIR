@@ -38,7 +38,7 @@ _MQTT_SEND_GEN = {}
 
 def tuya_ir_to_timings(code):
     """Convert a Tuya IR code (base64 of FastLZ level-1 data of LE uint16
-    microsecond timings) to a list of ints (mark, space, mark, ...)."""
+    microsecond timings) to a list of ints (mark, space, mark, ...), all positive."""
     inp = b64decode(code)
     out = bytearray()
     i = 0
@@ -362,8 +362,10 @@ class ESPHomeController(AbstractController):
 
         if service_data is None:
             # custom.7: Tuya IR string -> raw timings for the s06 `send_raw` action
+            # ESPHome transmit_raw: mark = positive, space = negative (alternating)
+            timings = tuya_ir_to_timings(command)
             service_data = {
-                "code": tuya_ir_to_timings(command),
+                "code": [t if i % 2 == 0 else -t for i, t in enumerate(timings)],
                 "carrier": self._controller_data.get(CONTROLLER_CONF["CARRIER"], 38000),
             }
 
